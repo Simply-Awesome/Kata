@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using Moq;
-using Xunit;
+﻿using System.Text.RegularExpressions;
 
 namespace Kata.Core.Tests
 {
@@ -25,7 +20,7 @@ namespace Kata.Core.Tests
         [Fact]
         public void DiamondFormProvider_GeneratesDiamondForm_OfSingleText_WhenCharInputIsA()
         {
-            var charA = 'A';
+            const char charA = 'A';
 
             var result = _sut.GenerateForm('A');
 
@@ -61,7 +56,7 @@ namespace Kata.Core.Tests
         {
             // arrange 
 
-            var charA = 'A';
+            const char charA = 'A';
 
             // act
 

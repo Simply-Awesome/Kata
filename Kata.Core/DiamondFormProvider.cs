@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Kata.Core
+﻿namespace Kata.Core
 {
     public class DiamondFormProvider : IFormProvider
     {
         private const string CarriageReturnAndNewLine = "\r\n";
 
-        private readonly Dictionary<char, int> _alphabetToIndex = new Dictionary<char, int>
+        private readonly Dictionary<char, int> _alphabetToIndex = new()
         {
             {'a', 1 },
             {'A', 1 },
@@ -64,7 +60,7 @@ namespace Kata.Core
             {'Z', 26 }
         };
         
-        private readonly SortedDictionary<int, char> _indexToUppercaseAlphabet = new SortedDictionary<int, char>
+        private readonly SortedDictionary<int, char> _indexToUppercaseAlphabet = new()
         {
             {1, 'A' },
             {2, 'B'},
@@ -141,9 +137,9 @@ namespace Kata.Core
 
             var sortedLettersForDiamondInTopOrBottomHalf = new SortedDictionary<int, char>(lettersForDiamondInTopOrBottomHalf);
 
-            int lettersForDiamondInTopOrBottomHalfCount = lettersForDiamondInTopOrBottomHalf.Count;
+            int lettersForDiamondInTopOrBottomHalfCount = sortedLettersForDiamondInTopOrBottomHalf.Count;
 
-            foreach (KeyValuePair<int, char> sortedLetterForDiamondInTopOrBottomHalf in sortedLettersForDiamondInTopOrBottomHalf)
+            foreach (KeyValuePair<int, char> letterForDiamondInTopOrBottomHalf in sortedLettersForDiamondInTopOrBottomHalf)
             {
                 string prefixOrSuffixOfLetters = new string(' ', lettersForDiamondInTopOrBottomHalfCount);
                 lettersForDiamondInTopOrBottomHalfCount -= 1;
@@ -151,7 +147,7 @@ namespace Kata.Core
                 if (horizontalLayers.Count == 0)
                 {
                     horizontalLayers.Enqueue(prefixOrSuffixOfLetters
-                                             + sortedLetterForDiamondInTopOrBottomHalf.Value
+                                             + letterForDiamondInTopOrBottomHalf.Value
                                              + prefixOrSuffixOfLetters
                                              + CarriageReturnAndNewLine);
 
@@ -160,9 +156,9 @@ namespace Kata.Core
                 else
                 {
                     horizontalLayers.Enqueue(prefixOrSuffixOfLetters
-                                             + sortedLetterForDiamondInTopOrBottomHalf.Value
+                                             + letterForDiamondInTopOrBottomHalf.Value
                                              + new string(' ', horizontalGapBetweenLetters)
-                                             + sortedLetterForDiamondInTopOrBottomHalf.Value
+                                             + letterForDiamondInTopOrBottomHalf.Value
                                              + prefixOrSuffixOfLetters
                                              + CarriageReturnAndNewLine);
 

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Kata.Core
+﻿namespace Kata.Core
 {
     public class KataConsole
     {
