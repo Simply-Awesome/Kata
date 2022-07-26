@@ -1,8 +1,3 @@
-using System;
-using System.IO;
-using Moq;
-using Xunit;
-
 namespace Kata.Core.Tests
 {
     public class KataConsoleTests : IDisposable

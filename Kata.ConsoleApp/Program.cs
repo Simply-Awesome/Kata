@@ -1,23 +1,27 @@
-﻿using System;
-using Kata.Core;
+﻿using Kata.Core;
 
-namespace Kata.ConsoleApp
+if (args.Length == 0)
 {
-    class Program
+    ShowInfoMessageIfNoArgumentIsProvided();
+}
+else
+{
+    EnsureValidArgumentIsProvided(args);
+
+    new KataConsole(new DiamondFormProvider()).Write(args[0][0]);
+}
+
+
+
+static void EnsureValidArgumentIsProvided(string[] args)
+{
+    if (args is not { Length: 1 } || string.IsNullOrWhiteSpace(args[0]) || args[0].Length != 1)
     {
-        static void Main(string[] args)
-        {
-            EnsureArgumentIsProvided(args);
-
-            new KataConsole(new DiamondFormProvider()).Write(args[0][0]);
-        }
-
-        private static void EnsureArgumentIsProvided(string[] args)
-        {
-            if (!(args is { Length: 1 }) || string.IsNullOrWhiteSpace(args[0]) || args[0].Length != 1)
-            {
-                throw new ArgumentException($"Valid {nameof(args)} is required");
-            }
-        }
+        throw new ArgumentException($"Valid {nameof(args)} is required. For instructions and help, see https://github.com/Simply-Awesome/Kata/blob/main/README.md");
     }
+}
+
+static void ShowInfoMessageIfNoArgumentIsProvided()
+{
+    Console.WriteLine($"Kata console app. {Environment.NewLine}For instructions and help, see https://github.com/Simply-Awesome/Kata/blob/main/README.md");
 }
