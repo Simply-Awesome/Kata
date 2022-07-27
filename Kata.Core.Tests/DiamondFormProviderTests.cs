@@ -4,6 +4,8 @@ namespace Kata.Core.Tests
 {
     public class DiamondFormProviderTests
     {
+        private const string CarriageReturnAndNewLine = "\r\n";
+
         private readonly DiamondFormProvider _sut;
 
         public DiamondFormProviderTests()
@@ -52,7 +54,7 @@ namespace Kata.Core.Tests
         [InlineData('X')]
         [InlineData('Y')]
         [InlineData('Z')]
-        public void DiamondFormProvider_GeneratesDiamondForm_WithCharA_AppearingOnce_AtTopAndBottomHorizontalLayers_AtCentre(char value)
+        public void DiamondFormProvider_GeneratesDiamondForm_WithCharA_Appearing1Time_AtTopAndBottomHorizontalLayers_AtCentre(char value)
         {
             // arrange 
 
@@ -65,7 +67,7 @@ namespace Kata.Core.Tests
             // assert
 
             var horizontalLayers = result
-                .Split("\r\n")
+                .Split(CarriageReturnAndNewLine)
                 .ToList();
 
             Assert.True(horizontalLayers.Count >= 3, "There SHOULD be a top and bottom (and central) horizontal layer");
@@ -107,7 +109,7 @@ namespace Kata.Core.Tests
         [InlineData('X')]
         [InlineData('Y')]
         [InlineData('Z')]
-        public void DiamondFormProvider_GeneratesDiamondForm_WithCharInput_ExceptCharA_AppearingTwice_InCentreHorizontalLayer_AtEnds(char value)
+        public void DiamondFormProvider_GeneratesDiamondForm_WithCharInput_Appearing2Times_InCentreHorizontalLayer_AtEnds(char value)
         {
             // act
 
@@ -116,7 +118,7 @@ namespace Kata.Core.Tests
             // assert
 
             var horizontalLayers = result
-                .Split("\r\n")
+                .Split(CarriageReturnAndNewLine)
                 .ToList();
             
             Assert.True(horizontalLayers.Count % 2 == 1, "There SHOULD be a central horizontal layer");
@@ -166,7 +168,7 @@ namespace Kata.Core.Tests
             // assert
 
             var horizontalChars = result
-                .Split("\r\n")
+                .Split(CarriageReturnAndNewLine)
                 .Select(hl => hl.Replace(" ", string.Empty).Distinct())
                 .ToList();
 
@@ -214,7 +216,7 @@ namespace Kata.Core.Tests
         [InlineData('X')]
         [InlineData('Y')]
         [InlineData('Z')]
-        public void DiamondFormProvider_GeneratesDiamondForm_WithChars_ExceptCharInputAndCharA_Appears4Times(char value)
+        public void DiamondFormProvider_GeneratesDiamondForm_WithCharInput_Appearing4Times_ExceptCharInputAndCharA(char value)
         {
             // act
 
@@ -224,7 +226,7 @@ namespace Kata.Core.Tests
 
             var distinctChars = new string(result.Distinct().ToArray())
                 .Replace(" ", string.Empty)
-                .Replace("\r\n", string.Empty)
+                .Replace(CarriageReturnAndNewLine, string.Empty)
                 .Replace(value + string.Empty, string.Empty)
                 .Replace("A", string.Empty);
 
@@ -234,8 +236,43 @@ namespace Kata.Core.Tests
             }
         }
 
+
+        [Fact]
+        public void DiamondFormProvider_GeneratesDiamondForm_WithNoWhiteSpace_WhenCharInputIsA()
+        {
+            // arrange
+
+            char value = 'A';
+
+            // act
+
+            var result = _sut.GenerateForm(value);
+
+            // assert
+
+            var horizontalLayers = result
+                .Split(CarriageReturnAndNewLine)
+                .ToList();
+
+            foreach (var horizontalLayer in horizontalLayers.Where(hs => hs.Contains(value)))
+            {
+                var charsInHorizontalLayer = horizontalLayer.Replace(" ", string.Empty);
+
+                var distinctChars = charsInHorizontalLayer.Distinct().ToList();
+
+                Assert.NotNull(distinctChars);
+                Assert.Single(distinctChars);
+
+                var firstIndexOccurrence = horizontalLayer.IndexOf(distinctChars.First());
+                var secondIndexOccurrence = horizontalLayer.LastIndexOf(distinctChars.Last());
+
+                Assert.Equal(1, charsInHorizontalLayer.Length);
+
+                Assert.Equal(firstIndexOccurrence, secondIndexOccurrence);
+            }
+        }
+
         [Theory]
-        [InlineData('A', 0)]
         [InlineData('B', 1)]
         [InlineData('C', 3)]
         [InlineData('D', 5)]
@@ -261,7 +298,7 @@ namespace Kata.Core.Tests
         [InlineData('X', 45)]
         [InlineData('Y', 47)]
         [InlineData('Z', 49)]
-        public void DiamondFormProvider_GeneratesDiamondForm_WithChars_CorrectlySpaced_InEachHorizontalLayer(char value, int gap)
+        public void DiamondFormProvider_GeneratesDiamondForm_WithCorrectWhiteSpace_InEachHorizontalLayer(char value, int gap)
         {
             // act
 
@@ -270,7 +307,7 @@ namespace Kata.Core.Tests
             // assert
 
             var horizontalLayers = result
-                .Split("\r\n")
+                .Split(CarriageReturnAndNewLine)
                 .ToList();
 
             foreach (var horizontalLayer in horizontalLayers.Where(hs => hs.Contains(value)))
@@ -285,19 +322,10 @@ namespace Kata.Core.Tests
                 var firstIndexOccurrence = horizontalLayer.IndexOf(distinctChars.First());
                 var secondIndexOccurrence = horizontalLayer.LastIndexOf(distinctChars.Last());
 
-                if (gap == 0)
-                {
-                    Assert.Equal(1, charsInHorizontalLayer.Length);
+                Assert.Equal(2, charsInHorizontalLayer.Length);
 
-                    Assert.Equal(firstIndexOccurrence, secondIndexOccurrence);
-                }
-                else
-                {
-                    Assert.Equal(2, charsInHorizontalLayer.Length);
-
-                    Assert.Equal(horizontalLayer[..(firstIndexOccurrence + 1)].Length * 2 + gap, horizontalLayer.Length);
-                    Assert.Equal(horizontalLayer.Substring(secondIndexOccurrence, horizontalLayer.Length - secondIndexOccurrence).Length * 2 + gap, horizontalLayer.Length);
-                }
+                Assert.Equal(horizontalLayer[..(firstIndexOccurrence + 1)].Length * 2 + gap, horizontalLayer.Length);
+                Assert.Equal(horizontalLayer.Substring(secondIndexOccurrence, horizontalLayer.Length - secondIndexOccurrence).Length * 2 + gap, horizontalLayer.Length);
             }
         }
 
